@@ -2,9 +2,10 @@
 
 module Lib (run) where
 
-import Control.Lens
+import Control.Lens hiding (transform)
 import Data.Bifunctor
 import Data.Tree
+import Data.Tree.Lens
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
 import Graphics.Gloss.Interface.IO.Interact
@@ -108,15 +109,12 @@ run =
     (makeColor 0 0 0 1)
     fps
     lilguy
-    (render canonical)
+    render
     react
     update
 
-render :: Transform -> Skeleton -> Picture
-render t (Node bone@(Bone _ trans) trs) = pictures $ renderBone t bone : map (applyTransform t . render trans) trs
-
-renderBone :: Transform -> Bone -> Picture
-renderBone tParent (Bone pic t) = pic & applyTransform t & applyTransform tParent
+render :: Skeleton -> Picture
+render (Node (Bone pic trans) trs) = pictures $ map (applyTransform trans) (pic : map render trs)
 
 applyTransform :: Transform -> Picture -> Picture
 applyTransform (Transform (x, y) theta) = translate x y . rotate theta
@@ -125,4 +123,6 @@ react :: Event -> Skeleton -> Skeleton
 react _ = id
 
 update :: Float -> Skeleton -> Skeleton
-update dt = id
+update dt =
+  ((branches . _head . root . transform . rotation) +~ (60 * dt))
+    . ((branches . _head . branches . _head . root . transform . rotation) +~ (60 * dt))
