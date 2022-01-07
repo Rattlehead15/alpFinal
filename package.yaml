@@ -24,6 +24,13 @@ dependencies:
 - gloss
 - lens
 - containers
+- OpenGL
+- GLUT
+- bytestring
+- cereal
+- attoparsec
+- STL
+- linear
 
 library:
   source-dirs: src

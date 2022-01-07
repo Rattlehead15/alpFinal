@@ -1,6 +1,6 @@
 module Main where
 
-import Lib
+import qualified MainGL
 
 main :: IO ()
-main = run
+main = MainGL.main
