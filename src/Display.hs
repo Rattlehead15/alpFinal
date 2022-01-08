@@ -11,13 +11,17 @@ import Linear hiding (frustum)
 import Model
 import Skeleton
 
-display :: IORef (Transform GLdouble) -> Skeleton GLdouble -> DisplayCallback
-display camRef amogus = do
+empty :: IO ()
+empty = do loadIdentity; clearColor $= Color4 0.1 0.1 0.1 0; clear [ColorBuffer, DepthBuffer]
+
+display :: IORef (Transform GLdouble) -> IORef (Skeleton GLdouble) -> DisplayCallback
+display camRef amogusRef = do
   loadIdentity
   (Transform p r) <- get camRef
   useM44 (inv44 $ mkTransformation r p)
   clearColor $= Color4 0.1 0.1 0.1 0
   clear [ColorBuffer, DepthBuffer]
+  amogus <- get amogusRef
   preservingMatrix $ renderSkeleton amogus
   preservingMatrix $ do
     materialDiffuse Front $= Color4 0.1 0.9 0.1 (1 :: GLfloat)

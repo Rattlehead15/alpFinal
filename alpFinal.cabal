@@ -49,6 +49,7 @@ library
     , gloss
     , lens
     , linear
+    , reactive-banana
   default-language: Haskell2010
 
 executable alpFinal-exe
@@ -71,6 +72,7 @@ executable alpFinal-exe
     , gloss
     , lens
     , linear
+    , reactive-banana
   default-language: Haskell2010
 
 test-suite alpFinal-test
@@ -94,4 +96,5 @@ test-suite alpFinal-test
     , gloss
     , lens
     , linear
+    , reactive-banana
   default-language: Haskell2010

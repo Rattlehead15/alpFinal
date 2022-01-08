@@ -1,14 +1,17 @@
 module Model where
 
+import Control.Lens
 import Control.Monad
 import Data.Attoparsec.ByteString
 import Data.ByteString
 import Data.Serialize
 import Data.Serialize.Get
 import Data.Tree
+import Data.Tree.Lens
 import Graphics.Formats.STL
 import Graphics.UI.GLUT
 import Linear hiding (rotate)
+import Reactive.Banana
 import Skeleton
 import Prelude hiding (readFile)
 
@@ -63,3 +66,6 @@ makeMegaAMOGUS amogus =
         )
         []
     ]
+
+mongus :: Skeleton GLdouble -> Int -> Skeleton GLdouble
+mongus m t = m & (branches . _head . root . Skeleton.transform . rotation) *~ axisAngle (V3 0 1 0) (fromIntegral t * 0.01)

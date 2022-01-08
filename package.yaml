@@ -31,6 +31,7 @@ dependencies:
 - attoparsec
 - STL
 - linear
+- reactive-banana
 
 library:
   source-dirs: src

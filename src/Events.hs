@@ -2,6 +2,7 @@
 
 module Events where
 
+import Control.Event.Handler
 import Control.Lens
 import Control.Monad
 import Data.IORef
@@ -22,18 +23,25 @@ keyToLens KeyRight = Just right
 keyToLens KeyDown = Just down
 keyToLens _ = Nothing
 
+charToLens :: Functor f => Char -> Maybe ((KeyState -> f KeyState) -> KeysState -> f KeysState)
+charToLens 'w' = Just up
+charToLens 'a' = Just left
+charToLens 's' = Just down
+charToLens 'd' = Just right
+charToLens _ = Nothing
+
 onMoveKeys :: KeyState -> IORef KeysState -> SpecialCallback
 onMoveKeys state keysRef k _ =
   case keyToLens k of
     Nothing -> return ()
     Just key -> keysRef $~! (key .~ state)
 
-onWasd :: KeyState -> IORef KeysState -> KeyboardCallback
-onWasd state keysRef 'w' _ = keysRef $~! (up .~ state)
-onWasd state keysRef 'a' _ = keysRef $~! (left .~ state)
-onWasd state keysRef 's' _ = keysRef $~! (down .~ state)
-onWasd state keysRef 'd' _ = keysRef $~! (right .~ state)
-onWasd _ _ _ _ = return ()
+onWasd :: KeyState -> IORef KeysState -> Char -> IO ()
+onWasd state keysRef 'w' = keysRef $~! (up .~ state)
+onWasd state keysRef 'a' = keysRef $~! (left .~ state)
+onWasd state keysRef 's' = keysRef $~! (down .~ state)
+onWasd state keysRef 'd' = keysRef $~! (right .~ state)
+onWasd _ _ _ = return ()
 
 onMouse :: IORef (Transform GLdouble) -> IORef (Maybe Position) -> MotionCallback
 onMouse camRef lastRef pos@(Position x y) = do
@@ -51,11 +59,11 @@ onMouse camRef lastRef pos@(Position x y) = do
                   Just (Position lastx lasty) -> (- speed * fromIntegral (x - lastx) / fromIntegral sizex, - speed * fromIntegral (y - lasty) / fromIntegral sizey)
               )
         )
-  get camRef >>= (print . (^. Skeleton.rotation))
   lastRef $= Just pos
 
-onUpdate :: IORef (Transform GLdouble) -> IORef KeysState -> IdleCallback
-onUpdate camRef keysRef = do
+onUpdate :: Handler Int -> IORef (Transform GLdouble) -> IORef KeysState -> IdleCallback
+onUpdate fireTime camRef keysRef = do
+  get elapsedTime >>= fireTime
   trans <- get camRef
   keys <- get keysRef
   camRef $~! (Skeleton.position .~ updatePos trans keys)

@@ -11,6 +11,13 @@ packages:
       sha256: 6b1efb81d06354328d1c5d4f6428ab36d65cc44f4e8a31c38f33da69c5bd0d74
   original:
     hackage: STL-0.3.0.6@sha256:ca0f28de8a5ed0acb8e23fe83ea6ae06ed43e411a1ffa5d1426eb28f8444dc22,1545
+- completed:
+    hackage: reactive-banana-1.2.2.0@sha256:fe56b82f1e0e82f986b2fe9a2f17ef4775315768595adfb40648322a8d1b1d8c,4027
+    pantry-tree:
+      size: 2443
+      sha256: a4169d84c8bd41a5ea5a02b6c2d0802fd8f5f9f358c3586a678104387a390d84
+  original:
+    hackage: reactive-banana-1.2.2.0@sha256:fe56b82f1e0e82f986b2fe9a2f17ef4775315768595adfb40648322a8d1b1d8c,4027
 snapshots:
 - completed:
     size: 586103
