@@ -10,7 +10,6 @@ import Data.Maybe
 import Graphics.UI.GLUT
 import Linear
 import Skeleton
-import Util
 
 data KeysState = MoveKeys {_left :: KeyState, _up :: KeyState, _right :: KeyState, _down :: KeyState} deriving (Show)
 
@@ -43,7 +42,7 @@ onWasd state keysRef 's' = keysRef $~! (down .~ state)
 onWasd state keysRef 'd' = keysRef $~! (right .~ state)
 onWasd _ _ _ = return ()
 
-onMouse :: IORef (Transform GLdouble) -> IORef (Maybe Position) -> MotionCallback
+onMouse :: IORef Transform -> IORef (Maybe Position) -> MotionCallback
 onMouse camRef lastRef pos@(Position x y) = do
   (_, Size sizex sizey) <- get viewport
   let speed = 10
@@ -61,7 +60,7 @@ onMouse camRef lastRef pos@(Position x y) = do
         )
   lastRef $= Just pos
 
-onUpdate :: Handler Int -> IORef (Transform GLdouble) -> IORef KeysState -> IdleCallback
+onUpdate :: Handler Int -> IORef Transform -> IORef KeysState -> IdleCallback
 onUpdate fireTime camRef keysRef = do
   get elapsedTime >>= fireTime
   trans <- get camRef
@@ -76,9 +75,9 @@ updateRot rot@(Quaternion w (V3 x y z)) (sx, sy) =
    in axisAngle (V3 0 1 0) sx
         * (if abs newY >= 0.99 && sy * newY <= 0 then rot else afterPitch)
 
-updatePos :: Transform GLdouble -> KeysState -> V3 GLdouble
+updatePos :: Transform -> KeysState -> V3 GLdouble
 updatePos (Transform pos rot) (MoveKeys l u r d) = pos + strafe * (speed r - speed l) + advance * (speed d - speed u)
   where
-    speed k = if k == Down then 0.3 else 0
+    speed k = if k == Down then 0.1 else 0
     strafe = Linear.rotate rot (V3 1 0 0)
     advance = Linear.rotate rot (V3 0 0 1)

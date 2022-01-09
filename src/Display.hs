@@ -9,24 +9,25 @@ import Graphics.Formats.STL (STL)
 import Graphics.UI.GLUT
 import Linear hiding (frustum)
 import Model
+import OBJ
 import Skeleton
 
 empty :: IO ()
 empty = do loadIdentity; clearColor $= Color4 0.1 0.1 0.1 0; clear [ColorBuffer, DepthBuffer]
 
-display :: IORef (Transform GLdouble) -> IORef (Skeleton GLdouble) -> DisplayCallback
-display camRef amogusRef = do
+display :: IORef Transform -> IORef Skeleton -> OBJ -> DisplayCallback
+display camRef amogusRef chabon = do
   loadIdentity
   (Transform p r) <- get camRef
   useM44 (inv44 $ mkTransformation r p)
   clearColor $= Color4 0.1 0.1 0.1 0
   clear [ColorBuffer, DepthBuffer]
   amogus <- get amogusRef
-  preservingMatrix $ renderSkeleton amogus
+  preservingMatrix $ renderOBJ chabon
+  preservingMatrix $ do translate (Vector3 0 0 (10 :: GLdouble)); renderSkeleton amogus
   preservingMatrix $ do
-    materialDiffuse Front $= Color4 0.1 0.9 0.1 (1 :: GLfloat)
-    translate (Vector3 0 (-1) (0 :: GLfloat))
-    scale 100 1 (100 :: GLfloat)
+    translate (Vector3 0 (-1) (0 :: GLdouble))
+    scale 100 1 (100 :: GLdouble)
     cube 1
   swapBuffers
 

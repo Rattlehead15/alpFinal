@@ -40,12 +40,12 @@ minimogus amogus = preservingMatrix $ do
   scale 0.01 0.01 (0.01 :: GLfloat)
   renderModel amogus
 
-makeMegaAMOGUS :: STL -> Tree (Bone GLdouble)
+makeMegaAMOGUS :: STL -> Skeleton
 makeMegaAMOGUS amogus =
   Node
     ( Bone
         (minimogus amogus)
-        (Transform (V3 0 0 0) (axisAngle (V3 0 0 0) 0))
+        (Transform (V3 0 0 0) noRot)
     )
     [ Node
         ( Bone
@@ -67,5 +67,39 @@ makeMegaAMOGUS amogus =
         []
     ]
 
-mongus :: Skeleton GLdouble -> Int -> Skeleton GLdouble
+mongus :: Skeleton -> Int -> Skeleton
 mongus m t = m & (branches . _head . root . Skeleton.transform . rotation) *~ axisAngle (V3 0 1 0) (fromIntegral t * 0.01)
+
+noRot :: Quaternion GLdouble
+noRot = axisAngle (V3 0 0 0) 0
+
+makeManco :: STL -> STL -> STL -> Skeleton
+makeManco manco hombro mano =
+  Node
+    ( Bone (renderModel manco) (Transform (V3 0 0 0) noRot)
+    )
+    [ Node
+        (Bone (renderModel hombro) (Transform (V3 0.18205 1.50746 0.03537) noRot))
+        [ Node
+            ( Bone
+                (renderModel mano)
+                ( Transform
+                    (V3 0.22733 (-0.14413) 0.01551)
+                    (axisAngle (V3 0 1 0) (toRad (-81.2)) * axisAngle (V3 1 0 0) (toRad (-30)))
+                )
+            )
+            []
+        ]
+    ]
+
+toRad :: GLdouble -> GLdouble
+toRad = (* (pi / 180))
+
+wobble :: GLdouble -> GLdouble -> Int -> GLdouble
+wobble min max t = let tf = fromIntegral t / 1000 in min + max * (0.5 * (1 + cos tf))
+
+wobbleAngle :: GLdouble -> GLdouble -> Int -> GLdouble
+wobbleAngle minth maxth = wobble (toRad minth) (toRad maxth)
+
+saludar :: Skeleton -> Int -> Skeleton
+saludar m t = m & (branches . _head . branches . _head . root . Skeleton.transform . rotation) *~ axisAngle (V3 0 1 0) (wobbleAngle 0 60 (2 * t))

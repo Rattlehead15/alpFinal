@@ -7,18 +7,17 @@ import Control.Lens
 import Data.Tree
 import Graphics.Rendering.OpenGL
 import Linear
-import Util
 
-data Transform a = Transform {_position :: V3 a, _rotation :: Quaternion a}
+data Transform = Transform {_position :: V3 GLdouble, _rotation :: Quaternion GLdouble}
 
-data Bone a = Bone {_render :: IO (), _transform :: Transform a}
+data Bone = Bone {_render :: IO (), _transform :: Transform}
 
-type Skeleton a = Tree (Bone a)
+type Skeleton = Tree Bone
 
 makeLenses ''Transform
 makeLenses ''Bone
 
-renderSkeleton :: Skeleton GLdouble -> IO ()
+renderSkeleton :: Skeleton -> IO ()
 renderSkeleton (Node (Bone renderBone (Transform pos@(V3 x y z) rot)) trs) = preservingMatrix $ do
   useM44 $ mkTransformation rot pos
   renderBone

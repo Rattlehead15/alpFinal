@@ -21,17 +21,19 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
-- gloss
 - lens
 - containers
 - OpenGL
 - GLUT
 - bytestring
+- text
 - cereal
 - attoparsec
 - STL
 - linear
 - reactive-banana
+- JuicyPixels
+- vector
 
 library:
   source-dirs: src
