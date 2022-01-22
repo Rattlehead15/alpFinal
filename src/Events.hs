@@ -40,6 +40,10 @@ onWasd state keysRef 'w' = keysRef $~! (up .~ state)
 onWasd state keysRef 'a' = keysRef $~! (left .~ state)
 onWasd state keysRef 's' = keysRef $~! (down .~ state)
 onWasd state keysRef 'd' = keysRef $~! (right .~ state)
+onWasd state keysRef 'W' = keysRef $~! (up .~ state)
+onWasd state keysRef 'A' = keysRef $~! (left .~ state)
+onWasd state keysRef 'S' = keysRef $~! (down .~ state)
+onWasd state keysRef 'D' = keysRef $~! (right .~ state)
 onWasd _ _ _ = return ()
 
 onMouse :: IORef Transform -> IORef (Maybe Position) -> MotionCallback
@@ -60,9 +64,8 @@ onMouse camRef lastRef pos@(Position x y) = do
         )
   lastRef $= Just pos
 
-onUpdate :: Handler Int -> IORef Transform -> IORef KeysState -> IdleCallback
-onUpdate fireTime camRef keysRef = do
-  get elapsedTime >>= fireTime
+onUpdate :: IORef Transform -> IORef KeysState -> IdleCallback
+onUpdate camRef keysRef = do
   trans <- get camRef
   keys <- get keysRef
   camRef $~! (Skeleton.position .~ updatePos trans keys)

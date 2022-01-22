@@ -25,13 +25,16 @@ source-repository head
 
 library
   exposed-modules:
+      APrelude
+      Collada
       Display
       Drawing
       Events
+      EX
       MainGL
-      Model
-      OBJ
       Skeleton
+      TH
+      Types
   other-modules:
       Paths_alpFinal
   hs-source-dirs:
@@ -49,8 +52,11 @@ library
     , lens
     , linear
     , reactive-banana
+    , split
+    , template-haskell
     , text
     , vector
+    , xml
   default-language: Haskell2010
 
 executable alpFinal-exe
@@ -59,7 +65,7 @@ executable alpFinal-exe
       Paths_alpFinal
   hs-source-dirs:
       app
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -dynamic
   build-depends:
       GLUT
     , JuicyPixels
@@ -74,8 +80,11 @@ executable alpFinal-exe
     , lens
     , linear
     , reactive-banana
+    , split
+    , template-haskell
     , text
     , vector
+    , xml
   default-language: Haskell2010
 
 test-suite alpFinal-test
@@ -85,7 +94,7 @@ test-suite alpFinal-test
       Paths_alpFinal
   hs-source-dirs:
       test
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -dynamic
   build-depends:
       GLUT
     , JuicyPixels
@@ -100,6 +109,9 @@ test-suite alpFinal-test
     , lens
     , linear
     , reactive-banana
+    , split
+    , template-haskell
     , text
     , vector
+    , xml
   default-language: Haskell2010

@@ -2,33 +2,33 @@
 
 module Display where
 
+import Collada
 import Control.Monad
 import Data.IORef
 import Drawing
-import Graphics.Formats.STL (STL)
 import Graphics.UI.GLUT
 import Linear hiding (frustum)
-import Model
-import OBJ
+import Reactive.Banana.Frameworks (Handler)
 import Skeleton
+import Types
 
 empty :: IO ()
 empty = do loadIdentity; clearColor $= Color4 0.1 0.1 0.1 0; clear [ColorBuffer, DepthBuffer]
 
-display :: IORef Transform -> IORef Skeleton -> OBJ -> DisplayCallback
-display camRef amogusRef chabon = do
+display :: Handler Int -> IORef Transform -> Collada -> IORef Skeleton -> DisplayCallback
+display fireTime camRef model poseRef = do
+  get elapsedTime >>= fireTime
   loadIdentity
   (Transform p r) <- get camRef
   useM44 (inv44 $ mkTransformation r p)
-  clearColor $= Color4 0.1 0.1 0.1 0
+  clearColor $= Color4 0.75 1 1 0
   clear [ColorBuffer, DepthBuffer]
-  amogus <- get amogusRef
-  preservingMatrix $ renderOBJ chabon
-  preservingMatrix $ do translate (Vector3 0 0 (10 :: GLdouble)); renderSkeleton amogus
+  materialDiffuse Front $= Color4 1 1 1 1
+  preservingMatrix $ get poseRef >>= renderCollada model
+  materialDiffuse Front $= Color4 0 1 0 1
   preservingMatrix $ do
-    translate (Vector3 0 (-1) (0 :: GLdouble))
-    scale 100 1 (100 :: GLdouble)
-    cube 1
+    translate (Vector3 0 (-100) (0 :: GLdouble))
+    cube 100
   swapBuffers
 
 reshape :: ReshapeCallback
