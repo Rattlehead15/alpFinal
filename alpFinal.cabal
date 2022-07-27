@@ -6,7 +6,7 @@ cabal-version: 1.12
 
 name:           alpFinal
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/Rattlehead15/alpFinal#readme>
+description:    Please see the README on GitHub at <https://github.com/githubuser/alpFinal#readme>
 homepage:       https://github.com/Rattlehead15/alpFinal#readme
 bug-reports:    https://github.com/Rattlehead15/alpFinal/issues
 author:         Lautaro Garavano
@@ -29,7 +29,6 @@ library
       APrelude
       Engine.Collada
       Engine.Display
-      Engine.Drawing
       Engine.Events
       Engine.MainGL
       Engine.Skeleton

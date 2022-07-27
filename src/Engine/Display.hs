@@ -4,7 +4,6 @@ module Engine.Display where
 
 import Data.IORef
 import Engine.Collada
-import Engine.Drawing
 import Engine.Skeleton
 import Graphics.UI.GLUT
 import Linear hiding (frustum)
@@ -44,3 +43,37 @@ reshape screenSize@(Size w h) = do
       right = top * aspect
   frustum (- right) right (- top) top near far
   matrixMode $= Modelview 0
+
+vertex3f :: (GLfloat, GLfloat, GLfloat) -> IO ()
+vertex3f (x, y, z) = Graphics.UI.GLUT.vertex $ Vertex3 x y z
+
+cube :: GLfloat -> IO ()
+cube w =
+  renderPrimitive Quads $
+    mapM_
+      vertex3f
+      [ (w, w, w),
+        (w, w, - w),
+        (w, - w, - w),
+        (w, - w, w),
+        (w, w, w),
+        (w, w, - w),
+        (- w, w, - w),
+        (- w, w, w),
+        (w, w, w),
+        (w, - w, w),
+        (- w, - w, w),
+        (- w, w, w),
+        (- w, w, w),
+        (- w, w, - w),
+        (- w, - w, - w),
+        (- w, - w, w),
+        (w, - w, w),
+        (w, - w, - w),
+        (- w, - w, - w),
+        (- w, - w, w),
+        (w, w, - w),
+        (w, - w, - w),
+        (- w, - w, - w),
+        (- w, w, - w)
+      ]
