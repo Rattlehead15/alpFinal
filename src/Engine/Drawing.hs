@@ -1,4 +1,4 @@
-module Drawing where
+module Engine.Drawing where
 
 import Graphics.UI.GLUT
 

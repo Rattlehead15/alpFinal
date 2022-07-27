@@ -1,22 +1,31 @@
+{-# LANGUAGE ImplicitParams #-}
+{-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE TemplateHaskell #-}
 
 module Types where
 
-import Control.Lens (makeLenses)
+import Control.Lens (Lens', makeLenses)
 import Data.Tree (Tree)
 import GHC.Arr (Array)
 import Graphics.Rendering.OpenGL (GLdouble, Normal3, TexCoord2, Vertex3)
 import Linear (M44)
 
-type Time = GLdouble
+type Number = GLdouble
+
+type Time = Number
 
 type Skeleton = Tree Joint
 
-type RunAnim = Time -> Skeleton -> Skeleton
+type BodyPart = Lens' Skeleton Joint
 
-data Animation = Anim {_duration :: Time, _runAnim :: RunAnim}
+type RunAnim a = (?t :: Time) => a
 
-type Curve = Time -> Time
+data Animation = Anim
+  { _duration :: Time,
+    _runAnim :: RunAnim (Skeleton -> Skeleton)
+  }
+
+type Curve = forall a. RunAnim a -> RunAnim a
 
 data VInfo = VInfo {_vertex :: Int, _normal :: Int, _texCoord :: Int} deriving (Show)
 
@@ -38,4 +47,3 @@ data Collada = Collada
 makeLenses ''VInfo
 makeLenses ''Joint
 makeLenses ''Collada
-makeLenses ''Animation

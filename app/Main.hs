@@ -1,6 +1,6 @@
 module Main where
 
-import qualified MainGL
+import qualified Engine.MainGL
 
 main :: IO ()
-main = MainGL.main
+main = Engine.MainGL.main

@@ -1,24 +1,22 @@
-module MainGL (main) where
+{-# LANGUAGE ImplicitParams #-}
 
+module Engine.MainGL (main) where
+
+import qualified Anims
 import Codec.Picture
-import Collada
 import Control.Arrow
 import Control.Lens
-import Control.Monad
-import Data.Either
 import Data.IORef
-import Data.Maybe
-import Data.Tree.Lens
 import Data.Vector.Storable
-import Display
-import EX (kick, model)
-import Events
+import Engine.Display
+import Engine.Events
+import Engine.Skeleton
 import GHC.Base (returnIO)
 import Graphics.UI.GLUT
 import Linear
+import Model (model)
 import Reactive.Banana
 import Reactive.Banana.Frameworks
-import Skeleton
 import Types
 
 main :: IO ()
@@ -67,7 +65,7 @@ main = do
     wasdDownEvent <- fromAddHandler $ AddHandler ((const .) >>> Just >>> (keyboardCallback $=) >>> (>> return (keyboardCallback $= Nothing)))
     wasdUpEvent <- fromAddHandler $ AddHandler ((const .) >>> Just >>> (keyboardUpCallback $=) >>> (>> return (keyboardUpCallback $= Nothing)))
     time <- fmap ((/ 1000) . fromIntegral) <$> fromChanges 0 timeAddHandler
-    let animation = flip (kick ^. runAnim) (model ^. joints) <$> time
+    let animation = (\t -> let ?t = t in let (Anim _ f) = Anims.main in f (model ^. joints)) <$> time
     changes animation >>= reactimate' . fmap (fmap (pose $=))
     reactimate $ onWasd Down keyState <$> wasdDownEvent
     reactimate $ onWasd Up keyState <$> wasdUpEvent

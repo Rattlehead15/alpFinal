@@ -1,15 +1,14 @@
 {-# LANGUAGE FlexibleContexts #-}
 
-module Display where
+module Engine.Display where
 
-import Collada
-import Control.Monad
 import Data.IORef
-import Drawing
+import Engine.Collada
+import Engine.Drawing
+import Engine.Skeleton
 import Graphics.UI.GLUT
 import Linear hiding (frustum)
 import Reactive.Banana.Frameworks (Handler)
-import Skeleton
 import Types
 
 empty :: IO ()

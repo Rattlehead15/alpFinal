@@ -1,15 +1,12 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Events where
+module Engine.Events where
 
-import Control.Event.Handler
 import Control.Lens
-import Control.Monad
 import Data.IORef
-import Data.Maybe
+import Engine.Skeleton
 import Graphics.UI.GLUT
 import Linear
-import Skeleton
 
 data KeysState = MoveKeys {_left :: KeyState, _up :: KeyState, _right :: KeyState, _down :: KeyState} deriving (Show)
 
@@ -68,7 +65,7 @@ onUpdate :: IORef Transform -> IORef KeysState -> IdleCallback
 onUpdate camRef keysRef = do
   trans <- get camRef
   keys <- get keysRef
-  camRef $~! (Skeleton.position .~ updatePos trans keys)
+  camRef $~! (Engine.Skeleton.position .~ updatePos trans keys)
   postRedisplay Nothing
 
 updateRot :: Quaternion GLdouble -> (GLdouble, GLdouble) -> Quaternion GLdouble

@@ -1,6 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Skeleton where
+module Engine.Skeleton where
 
 import Control.Lens
 import Data.Tree

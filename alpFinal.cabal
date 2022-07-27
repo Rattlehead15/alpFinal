@@ -25,14 +25,15 @@ source-repository head
 
 library
   exposed-modules:
+      Anims
       APrelude
-      Collada
-      Display
-      Drawing
-      Events
-      EX
-      MainGL
-      Skeleton
+      Engine.Collada
+      Engine.Display
+      Engine.Drawing
+      Engine.Events
+      Engine.MainGL
+      Engine.Skeleton
+      Model
       TH
       Types
   other-modules:

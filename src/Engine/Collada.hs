@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Collada where
+module Engine.Collada where
 
 import Control.Arrow
 import Control.Lens
@@ -16,7 +16,6 @@ import Data.Maybe
 import Data.String
 import Data.Text (pack)
 import Data.Tree
-import Data.Tree.Lens
 import GHC.Arr
 import Graphics.UI.GLUT
 import Linear
