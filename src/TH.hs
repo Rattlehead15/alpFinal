@@ -29,6 +29,7 @@ import Language.Haskell.TH
   )
 import Types (Animation (Anim), BodyPart, Collada (Collada), Joint (Joint), Skeleton, joints)
 
+-- | Creates lenses and sets up a 3D model from some file.
 forModel :: FilePath -> Q [Dec]
 forModel fileName = do
   f <- runIO $ readFile fileName
